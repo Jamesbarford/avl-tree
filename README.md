@@ -70,5 +70,6 @@ Run `make` and then run `./tests.out`
 - `avlTreeRelease` method
 - `avlTreeRemove` method that returns a node to be freed by the caller
 - `avlTreeForEach` make the callback method to return an int to break the loop
+- create stack based iteration
 - more comprehensive test suite
 - Better print function
