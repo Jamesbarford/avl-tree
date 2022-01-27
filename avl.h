@@ -33,7 +33,9 @@ typedef struct avlTree {
 
 avlTree *avlNew(avlTreeType *type);
 int avlInsert(avlTree *tree, void *key, void *value);
+
 void avlDelete(avlTree *tree, void *key);
+
 avlNode *avlSearch(avlTree *tree, void *key);
 void *avlGetValue(avlTree *tree, void *key);
 void avlForEach(avlTree *tree, void (*callback)(avlNode *node));
