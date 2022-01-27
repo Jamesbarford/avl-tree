@@ -12,7 +12,8 @@
 
 #define avlDebug(...)                                                          \
     do {                                                                       \
-        if (__AVL_DEBUG) fprintf(stderr, __VA_ARGS__);                         \
+        if (__AVL_DEBUG)                                                       \
+            fprintf(stderr, __VA_ARGS__);                                      \
     } while (0)
 
 #define _avlMax(a, b) ((a) > (b) ? (a) : (b))
@@ -36,8 +37,6 @@
                     ? (tree)->type->keycmp((k1), (k2))                         \
                     : -1)
 
-
-
 static avlNode *_avlNodeNew(void *key, void *value) {
     avlNode *node;
 
@@ -58,8 +57,11 @@ static avlNode *_rightRotate(avlNode *node) {
     avlNode *next_node = n2->right;
     n2->right = node;
     node->left = next_node;
-    node->height = _avlMax(_avlNodeHeight(node->left), _avlNodeHeight(node->right)) + 1;
-    n2->height = _avlMax(_avlNodeHeight(n2->left), _avlNodeHeight(n2->right)) + 1;
+    node->height =
+            _avlMax(_avlNodeHeight(node->left), _avlNodeHeight(node->right)) +
+            1;
+    n2->height =
+            _avlMax(_avlNodeHeight(n2->left), _avlNodeHeight(n2->right)) + 1;
     return n2;
 }
 
@@ -68,8 +70,11 @@ static avlNode *_leftRotate(avlNode *node) {
     avlNode *next_node = n2->left;
     n2->left = node;
     node->right = next_node;
-    node->height = _avlMax(_avlNodeHeight(node->left), _avlNodeHeight(node->right)) + 1;
-    n2->height = _avlMax(_avlNodeHeight(n2->left), _avlNodeHeight(n2->right)) + 1;
+    node->height =
+            _avlMax(_avlNodeHeight(node->left), _avlNodeHeight(node->right)) +
+            1;
+    n2->height =
+            _avlMax(_avlNodeHeight(n2->left), _avlNodeHeight(n2->right)) + 1;
     return n2;
 }
 
@@ -138,11 +143,11 @@ static avlNode *_avlNodeWithMinimumValue(avlNode *node) {
 }
 
 /**
- * Remove and free a node in the tree. The key and value get assigned to 
+ * Remove and free a node in the tree. The key and value get assigned to
  * the stack allocated node to release. Due to the rotations it is a bit
  * tricky trying to keep track of it.
  *
- * We determine if we need to assing to stack node predicated on the 
+ * We determine if we need to assing to stack node predicated on the
  * key pointer being NULL.
  */
 static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key,
@@ -162,9 +167,11 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key,
     cmpval = _avlKeyCmp(tree, key, node->key);
 
     if (cmpval < 0) {
-        node->left = _avlNodeDelete(tree, node->left, key, stack_node, has_freed);
+        node->left =
+                _avlNodeDelete(tree, node->left, key, stack_node, has_freed);
     } else if (cmpval > 0) {
-        node->right = _avlNodeDelete(tree, node->right, key, stack_node, has_freed);
+        node->right =
+                _avlNodeDelete(tree, node->right, key, stack_node, has_freed);
         /* exact match */
     } else if (cmpval == 0) {
         if ((node->left == NULL) || (node->right == NULL)) {
@@ -173,7 +180,8 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key,
                 tmp = node;
                 node = NULL;
             } else {
-                /* Before we lose track of what we are freeing assign to stack_node */
+                /* Before we lose track of what we are freeing assign to
+                 * stack_node */
                 if (stack_node->key == NULL)
                     *stack_node = *node;
                 *node = *tmp;
@@ -181,7 +189,7 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key,
 
             /**
              * TODO:
-             * Assign the node here for the caller to handle... 
+             * Assign the node here for the caller to handle...
              * I cannot get this node out of this mess.
              *
              * The best I seem to be able to do is keep track of the actual
@@ -191,7 +199,8 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key,
             *has_freed = 1;
             free(tmp);
         } else {
-            /* Before we lose track of what we are freeing assign to stack_node */
+            /* Before we lose track of what we are freeing assign to stack_node
+             */
             if (stack_node->key == NULL)
                 *stack_node = *node;
             tmp = _avlNodeWithMinimumValue(node->right);
@@ -282,7 +291,8 @@ int avlInsert(avlTree *tree, void *key, void *value) {
     /* We assign this to 0 if a node already exists with this key */
     exists = 1;
 
-    if ((new_root = _avlNodeInsert(tree, tree->root, key, value, &exists)) == NULL)
+    if ((new_root = _avlNodeInsert(tree, tree->root, key, value, &exists)) ==
+            NULL)
         return AVL_ERR;
 
     /* if the key has been newly inserted increment the size */
@@ -379,9 +389,8 @@ avlTree *avlNew(avlTreeType *type) {
 void avlRelease(avlTree *tree) {
     avlDebug("size => %u\n", tree->size);
     while (tree->root != NULL) {
-        avlDebug("free(%s => %s)\tsize => %u\n",
-                (char *)tree->root->key, (char *)tree->root->value,
-                tree->size);
+        avlDebug("free(%s => %s)\tsize => %u\n", (char *)tree->root->key,
+                (char *)tree->root->value, tree->size);
         avlDelete(tree, tree->root->key);
     }
     free(tree);
