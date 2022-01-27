@@ -12,15 +12,15 @@
 #define _avlPrintNode(t, n)                                                    \
     ((t)->type != NULL && (t)->type->printNode ? (t)->type->printNode(n)       \
                                                : (void)n)
-#define _avlFreeKey(tree, key)                                             \
+#define _avlFreeKey(tree, key)                                                 \
     ((tree)->type != NULL && (tree)->type->freeKey != NULL                     \
                     ? (tree)->type->freeKey((key))                             \
                     : (void)key)
-#define _avlFreeValue(tree, key)                                           \
+#define _avlFreeValue(tree, key)                                               \
     ((tree)->type != NULL && (tree)->type->freeKey != NULL                     \
                     ? (tree)->type->freeKey((key))                             \
                     : (void)key)
-#define _avlKeyCmp(tree, k1, k2)                                           \
+#define _avlKeyCmp(tree, k1, k2)                                               \
     ((tree)->type != NULL && (tree)->type->keycmp != NULL                      \
                     ? (tree)->type->keycmp((k1), (k2))                         \
                     : -1)
@@ -69,8 +69,7 @@ static avlNode *_leftRotate(avlNode *x) {
 }
 
 static avlNode *_avlNodeInsert(avlTree *tree, avlNode *node, void *key,
-        void *value)
-{
+        void *value) {
     if (node == NULL)
         return _avlNodeNew(key, value);
 
