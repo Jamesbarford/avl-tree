@@ -31,13 +31,13 @@ typedef struct avlTree {
     avlTreeType *type;
 } avlTree;
 
-avlTree *avlTreeNew(avlTreeType *type);
-int avlTreeInsert(avlTree *tree, void *key, void *value);
-void avlTreeDelete(avlTree *tree, void *key);
-avlNode *avlTreeSearch(avlTree *tree, void *key);
-void *avlTreeGetValue(avlTree *tree, void *key);
-void avlTreeForEach(avlTree *tree, void (*callback)(avlNode *node));
-void avlTreePrint(avlTree *tree);
-void avlTreeRelease(avlTree *tree);
+avlTree *avlNew(avlTreeType *type);
+int avlInsert(avlTree *tree, void *key, void *value);
+void avlDelete(avlTree *tree, void *key);
+avlNode *avlSearch(avlTree *tree, void *key);
+void *avlGetValue(avlTree *tree, void *key);
+void avlForEach(avlTree *tree, void (*callback)(avlNode *node));
+void avlPrint(avlTree *tree);
+void avlRelease(avlTree *tree);
 
 #endif

@@ -28,43 +28,43 @@ See `avlTreeType` for the vtable used to make generic function pointers
 
 Create a new tree specifying the type
 ```c
-avlTree *avlTreeNew(avlTreeType *type);
+avlTree *avlNew(avlTreeType *type);
 ```
 
 Insert a key value into the tree returns `AVL_OK` on success
 and `AVL_ERR` on failure
 ```c
-int avlTreeInsert(avlTree *tree, void *key, void *value);
+int avlInsert(avlTree *tree, void *key, void *value);
 ```
 
 Remove and free a node from the tree.
 ```c
-void avlTreeDelete(avlTree *tree, void *key);
+void avlDelete(avlTree *tree, void *key);
 ```
 
 Find a node in the tree ir `NULL`
 ```c
-avlNode *avlTreeSearch(avlTree *tree, void *key);
+avlNode *avlSearch(avlTree *tree, void *key);
 ```
 
 Find a node and return the value from the node or `NULL`
 ```c
-void *avlTreeGetValue(avlTree *tree, void *key);
+void *avlGetValue(avlTree *tree, void *key);
 ```
 
 Iterate over the tree
 ```c
-void avlTreeForEach(avlTree *tree, void (*callback)(avlNode *node));
+void avlForEach(avlTree *tree, void (*callback)(avlNode *node));
 ```
 
 Best effort at printing the tree calling `avl->type-printNode` on each node
 ```c
-void avlTreePrint(avlTree *tree);
+void avlPrint(avlTree *tree);
 ```
 
 Free all nodes, keys, values and the tree itself
 ```c
-void avlTreeRelease(avlTree *tree);
+void avlRelease(avlTree *tree);
 ```
 
 ## Compiling tests
@@ -72,8 +72,8 @@ void avlTreeRelease(avlTree *tree);
 Run `make` and then run `./tests.out`
 
 ## TODO:
-- `avlTreeRemove` method that returns a node to be freed by the caller
-- `avlTreeForEach` make the callback method to return an int to break the loop
+- `avlRemove` method that returns a node to be freed by the caller
+- `avlForEach` make the callback method to return an int to break the loop
 - create stack based iteration
 - more comprehensive test suite
 - Better print function

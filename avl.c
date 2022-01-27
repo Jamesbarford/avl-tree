@@ -12,15 +12,15 @@
 #define _avlPrintNode(t, n)                                                    \
     ((t)->type != NULL && (t)->type->printNode ? (t)->type->printNode(n)       \
                                                : (void)n)
-#define _avlTreeFreeKey(tree, key)                                             \
+#define _avlFreeKey(tree, key)                                             \
     ((tree)->type != NULL && (tree)->type->freeKey != NULL                     \
                     ? (tree)->type->freeKey((key))                             \
                     : (void)key)
-#define _avlTreeFreeValue(tree, key)                                           \
+#define _avlFreeValue(tree, key)                                           \
     ((tree)->type != NULL && (tree)->type->freeKey != NULL                     \
                     ? (tree)->type->freeKey((key))                             \
                     : (void)key)
-#define _avlTreeKeyCmp(tree, k1, k2)                                           \
+#define _avlKeyCmp(tree, k1, k2)                                           \
     ((tree)->type != NULL && (tree)->type->keycmp != NULL                      \
                     ? (tree)->type->keycmp((k1), (k2))                         \
                     : -1)
@@ -42,8 +42,8 @@ static avlNode *_avlNodeNew(void *key, void *value) {
 
 static void _avlNodeRelease(avlTree *tree, avlNode *node) {
     if (node) {
-        _avlTreeFreeKey(tree, node->key);
-        _avlTreeFreeValue(tree, node->key);
+        _avlFreeKey(tree, node->key);
+        _avlFreeValue(tree, node->key);
         free(node);
     }
 }
@@ -76,7 +76,7 @@ static avlNode *_avlNodeInsert(avlTree *tree, avlNode *node, void *key,
 
     int cmpval, balance, right_cmp, left_cmp;
 
-    cmpval = _avlTreeKeyCmp(tree, key, node->key);
+    cmpval = _avlKeyCmp(tree, key, node->key);
 
     if (cmpval < 0)
         node->left = _avlNodeInsert(tree, node->left, key, value);
@@ -90,7 +90,7 @@ static avlNode *_avlNodeInsert(avlTree *tree, avlNode *node, void *key,
     balance = _avlBalance(node);
 
     if (balance > 1) {
-        left_cmp = _avlTreeKeyCmp(tree, key, node->left->key);
+        left_cmp = _avlKeyCmp(tree, key, node->left->key);
         if (left_cmp < 0) {
             return _rightRotate(node);
         } else if (left_cmp > 0) {
@@ -100,7 +100,7 @@ static avlNode *_avlNodeInsert(avlTree *tree, avlNode *node, void *key,
     }
 
     if (balance < -1) {
-        right_cmp = _avlTreeKeyCmp(tree, key, node->right->key);
+        right_cmp = _avlKeyCmp(tree, key, node->right->key);
         if (right_cmp > 0) {
             return _leftRotate(node);
         } else if (right_cmp < 0) {
@@ -130,7 +130,7 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key) {
     int cmpval, balance;
     avlNode *tmp;
 
-    cmpval = _avlTreeKeyCmp(tree, key, node->key);
+    cmpval = _avlKeyCmp(tree, key, node->key);
 
     if (cmpval < 0) {
         node->left = _avlNodeDelete(tree, node->left, key);
@@ -188,9 +188,7 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key) {
     return node;
 }
 
-static void _avlTreePrint(avlTree *tree, avlNode *node, char *indent,
-        int last)
-{
+static void _avlPrint(avlTree *tree, avlNode *node, char *indent, int last) {
     if (node != NULL) {
         printf("%s", indent);
 
@@ -205,25 +203,25 @@ static void _avlTreePrint(avlTree *tree, avlNode *node, char *indent,
         _avlPrintNode(tree, node);
         printf("\n");
 
-        _avlTreePrint(tree, node->left, indent, 0);
-        _avlTreePrint(tree, node->right, indent, 1);
+        _avlPrint(tree, node->left, indent, 0);
+        _avlPrint(tree, node->right, indent, 1);
     }
 }
 
-static avlNode *_avlTreeSearch(avlTree *tree, avlNode *node, void *key) {
+static avlNode *_avlSearch(avlTree *tree, avlNode *node, void *key) {
     if (node == NULL)
         return NULL;
 
     int cmpval;
 
-    cmpval = _avlTreeKeyCmp(tree, key, node->key);
+    cmpval = _avlKeyCmp(tree, key, node->key);
 
     if (cmpval == 0) {
         return node;
     } else if (cmpval < 0) {
-        node = _avlTreeSearch(tree, node->left, key);
+        node = _avlSearch(tree, node->left, key);
     } else {
-        node = _avlTreeSearch(tree, node->right, key);
+        node = _avlSearch(tree, node->right, key);
     }
 
     /* NOT REACHED */
@@ -232,7 +230,7 @@ static avlNode *_avlTreeSearch(avlTree *tree, avlNode *node, void *key) {
 
 /* public methods */
 
-int avlTreeInsert(avlTree *tree, void *key, void *value) {
+int avlInsert(avlTree *tree, void *key, void *value) {
     avlNode *new_root;
 
     if ((new_root = _avlNodeInsert(tree, tree->root, key, value)) == NULL)
@@ -243,7 +241,7 @@ int avlTreeInsert(avlTree *tree, void *key, void *value) {
     return AVL_OK;
 }
 
-void avlTreeDelete(avlTree *tree, void *key) {
+void avlDelete(avlTree *tree, void *key) {
     avlNode *new_root;
     new_root = _avlNodeDelete(tree, tree->root, key);
 
@@ -261,42 +259,42 @@ void avlTreeDelete(avlTree *tree, void *key) {
     tree->root = new_root;
 }
 
-avlNode *avlTreeSearch(avlTree *tree, void *key) {
+avlNode *avlSearch(avlTree *tree, void *key) {
     avlNode *found;
 
-    if ((found = _avlTreeSearch(tree, tree->root, key)) == NULL)
+    if ((found = _avlSearch(tree, tree->root, key)) == NULL)
         return NULL;
 
     return found;
 }
 
-void *avlTreeGetValue(avlTree *tree, void *key) {
+void *avlGetValue(avlTree *tree, void *key) {
     avlNode *found;
 
-    if ((found = _avlTreeSearch(tree, tree->root, key)) == NULL)
+    if ((found = _avlSearch(tree, tree->root, key)) == NULL)
         return NULL;
 
     return found->value;
 }
 
-void avlTreePrint(avlTree *tree) {
+void avlPrint(avlTree *tree) {
     char indent[BUFSIZ] = {0};
-    _avlTreePrint(tree, tree->root, indent, 1);
+    _avlPrint(tree, tree->root, indent, 1);
 }
 
-void _avlTreeForEach(avlNode *node, void (*callback)(avlNode *node)) {
+void _avlForEach(avlNode *node, void (*callback)(avlNode *node)) {
     if (node != NULL) {
         callback(node);
-        _avlTreeForEach(node->left, callback);
-        _avlTreeForEach(node->right, callback);
+        _avlForEach(node->left, callback);
+        _avlForEach(node->right, callback);
     }
 }
 
-void avlTreeForEach(avlTree *tree, void (*callback)(avlNode *node)) {
-    _avlTreeForEach(tree->root, callback);
+void avlForEach(avlTree *tree, void (*callback)(avlNode *node)) {
+    _avlForEach(tree->root, callback);
 }
 
-avlTree *avlTreeNew(avlTreeType *type) {
+avlTree *avlNew(avlTreeType *type) {
     avlTree *tree;
     if ((tree = malloc(sizeof(avlTree))) == NULL)
         return NULL;
@@ -310,9 +308,8 @@ avlTree *avlTreeNew(avlTreeType *type) {
  * Free all the nodes, keys, values and tree. The tree cannot be used
  * after this function is used
  */
-void avlTreeRelease(avlTree *tree) {
+void avlRelease(avlTree *tree) {
     while (tree->root != NULL)
-        avlTreeDelete(tree,
-                tree->root->key);
+        avlDelete(tree, tree->root->key);
     free(tree);
 }
