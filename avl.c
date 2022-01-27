@@ -88,6 +88,9 @@ static avlNode *_avlNodeInsert(avlTree *tree, avlNode *node, void *key,
                                _avlNodeHeight(node->right));
     balance = _avlBalance(node);
 
+    /* Increment number of nodes in tree */
+    tree->size++;
+
     if (balance > 1) {
         left_cmp = _avlKeyCmp(tree, key, node->left->key);
         if (left_cmp < 0) {
@@ -161,7 +164,6 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key) {
     if (node == NULL)
         return NULL;
 
-    tree->size++;
     node->height = 1 + _avlMax(_avlNodeHeight(node->left),
                                _avlNodeHeight(node->right));
     balance = _avlBalance(node);
