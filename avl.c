@@ -53,24 +53,24 @@ static avlNode *_avlNodeNew(void *key, void *value) {
     return node;
 }
 
-static avlNode *_rightRotate(avlNode *y) {
-    avlNode *x = y->left;
-    avlNode *T2 = x->right;
-    x->right = y;
-    y->left = T2;
-    y->height = _avlMax(_avlNodeHeight(y->left), _avlNodeHeight(y->right)) + 1;
-    x->height = _avlMax(_avlNodeHeight(x->left), _avlNodeHeight(x->right)) + 1;
-    return x;
+static avlNode *_rightRotate(avlNode *node) {
+    avlNode *n2 = node->left;
+    avlNode *next_node = n2->right;
+    n2->right = node;
+    node->left = next_node;
+    node->height = _avlMax(_avlNodeHeight(node->left), _avlNodeHeight(node->right)) + 1;
+    n2->height = _avlMax(_avlNodeHeight(n2->left), _avlNodeHeight(n2->right)) + 1;
+    return n2;
 }
 
-static avlNode *_leftRotate(avlNode *x) {
-    avlNode *y = x->right;
-    avlNode *T2 = y->left;
-    y->left = x;
-    x->right = T2;
-    x->height = _avlMax(_avlNodeHeight(x->left), _avlNodeHeight(x->right)) + 1;
-    y->height = _avlMax(_avlNodeHeight(y->left), _avlNodeHeight(y->right)) + 1;
-    return y;
+static avlNode *_leftRotate(avlNode *node) {
+    avlNode *n2 = node->right;
+    avlNode *next_node = n2->left;
+    n2->left = node;
+    node->right = next_node;
+    node->height = _avlMax(_avlNodeHeight(node->left), _avlNodeHeight(node->right)) + 1;
+    n2->height = _avlMax(_avlNodeHeight(n2->left), _avlNodeHeight(n2->right)) + 1;
+    return n2;
 }
 
 /**
