@@ -62,12 +62,16 @@ Best effort at printing the tree calling `avl->type-printNode` on each node
 void avlTreePrint(avlTree *tree);
 ```
 
+Free all nodes, keys, values and the tree itself
+```c
+void avlTreeRelease(avlTree *tree);
+```
+
 ## Compiling tests
 
 Run `make` and then run `./tests.out`
 
 ## TODO:
-- `avlTreeRelease` method
 - `avlTreeRemove` method that returns a node to be freed by the caller
 - `avlTreeForEach` make the callback method to return an int to break the loop
 - create stack based iteration

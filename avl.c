@@ -114,7 +114,7 @@ static avlNode *_avlNodeInsert(avlTree *tree, avlNode *node, void *key,
 
 static avlNode *_avlNodeWithMinimumValue(avlNode *node) {
     avlNode *cur = node;
-    while (node->left != NULL)
+    while (cur->left != NULL)
         cur = cur->left;
     return cur;
 }
@@ -138,7 +138,7 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key) {
         node->right = _avlNodeDelete(tree, node->right, key);
         /* exact match */
     } else if (cmpval == 0) {
-        if ((node->left == NULL) || (node->right) == NULL) {
+        if ((node->left == NULL) || (node->right == NULL)) {
             tmp = node->left != NULL ? node->left : node->right;
             if (tmp == NULL) {
                 tmp = node;
@@ -162,6 +162,7 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key) {
     if (node == NULL)
         return NULL;
 
+    tree->size++;
     node->height = 1 + _avlMax(_avlNodeHeight(node->left),
                                _avlNodeHeight(node->right));
     balance = _avlBalance(node);
@@ -188,7 +189,8 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key) {
 }
 
 static void _avlTreePrint(avlTree *tree, avlNode *node, char *indent,
-        int last) {
+        int last)
+{
     if (node != NULL) {
         printf("%s", indent);
 
@@ -302,4 +304,15 @@ avlTree *avlTreeNew(avlTreeType *type) {
     tree->size = 0;
     tree->root = NULL;
     return tree;
+}
+
+/**
+ * Free all the nodes, keys, values and tree. The tree cannot be used
+ * after this function is used
+ */
+void avlTreeRelease(avlTree *tree) {
+    while (tree->root != NULL)
+        avlTreeDelete(tree,
+                tree->root->key);
+    free(tree);
 }

@@ -38,5 +38,6 @@ avlNode *avlTreeSearch(avlTree *tree, void *key);
 void *avlTreeGetValue(avlTree *tree, void *key);
 void avlTreeForEach(avlTree *tree, void (*callback)(avlNode *node));
 void avlTreePrint(avlTree *tree);
+void avlTreeRelease(avlTree *tree);
 
 #endif
