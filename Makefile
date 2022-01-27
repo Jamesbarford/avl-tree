@@ -1,11 +1,7 @@
-TARGET := tests.out
-CC     := cc
-CFLAGS := -Wall -Werror -Wpedantic -O0 -g
+testavl: avl.h avl.c
 
-all: $(TARGET)
-
-$(TARGET): avltest.c avl.c
-		$(CC) -o $(TARGET) $(FLAGS) $^
+testavl: avl.c avltest.c
+		$(CC) -Wall -Werror -Os -g -o testavl avl.c avltest.c
 
 clean:
-		rm -rf $(TARGET)
+		rm -rf testavl
