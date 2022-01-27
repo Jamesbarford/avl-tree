@@ -25,26 +25,25 @@ avlTreeType string_table = {
         .printNode = strPrintNode,
 };
 
-
 avlTreeType malloced_string_table = {
-    .keycmp = strKeycmp,
-    .freeKey = tryFree,
-    .freeValue = tryFree,
-    .printNode = strPrintNode,
+        .keycmp = strKeycmp,
+        .freeKey = tryFree,
+        .freeValue = tryFree,
+        .printNode = strPrintNode,
 };
 
 struct K_V {
     char *key;
     char *value;
 } test_table[] = {
-    {"foo", "bar"},
-    {"key", "value"},
-    {"next", "item"},
-    {"yeeet", "gta"},
-    {"revolut", "bank"},
-    {"debit", "card"},
-    {"empty", "bowling"},
-    { NULL, NULL },
+        {"foo", "bar"},
+        {"key", "value"},
+        {"next", "item"},
+        {"yeeet", "gta"},
+        {"revolut", "bank"},
+        {"debit", "card"},
+        {"empty", "bowling"},
+        {NULL, NULL},
 };
 
 /**
@@ -58,7 +57,7 @@ int testFreeingKeysAndValues(void) {
     while (ptr != NULL && ptr->key != NULL) {
         char *key = strdup(ptr->key);
         char *value = strdup(ptr->value);
-        
+
         avlInsert(tree, key, value);
         ptr++;
     }
