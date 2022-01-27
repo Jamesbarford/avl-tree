@@ -21,19 +21,18 @@ avlTreeType string_table = {
 
 int main(void) {
     avlTree *tree;
-    tree = avlTreeNew(&string_table);
-    avlTreeInsert(tree, "hello", "world");
-    avlTreeInsert(tree, "hey", "there");
-    avlTreeInsert(tree, "whats", "up");
-    avlTreeInsert(tree, "how're", "you?");
+    tree = avlNew(&string_table);
+    avlInsert(tree, "hello", "world");
+    avlInsert(tree, "hey", "there");
+    avlInsert(tree, "whats", "up");
+    avlInsert(tree, "how're", "you?");
     printf("inserted\n");
 
-    avlTreePrint(tree);
-    avlTreeDelete(tree, "whats");
+    avlPrint(tree);
+    printf("size => %u\n", tree->size);
     printf("remove\n");
-    avlTreePrint(tree);
+    avlDelete(tree, "whats");
+    avlPrint(tree);
 
-    char *value = avlTreeGetValue(tree, "hey8asd8as8d");
-    if (value)
-        printf("%s\n", value);
+    avlRelease(tree);
 }

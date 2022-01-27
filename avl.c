@@ -148,7 +148,6 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key) {
             } else {
                 *node = *tmp;
             }
-            tree->size--;
             _avlNodeRelease(tree, tmp);
         } else {
             tmp = _avlNodeWithMinimumValue(node->right);
@@ -164,6 +163,7 @@ static avlNode *_avlNodeDelete(avlTree *tree, avlNode *node, void *key) {
     if (node == NULL)
         return NULL;
 
+    tree->size--;
     node->height = 1 + _avlMax(_avlNodeHeight(node->left),
                                _avlNodeHeight(node->right));
     balance = _avlBalance(node);
