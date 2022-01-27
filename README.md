@@ -3,7 +3,8 @@
 _This is still a bit of a WIP, see TODO below_
 
 A generic implementation of an [avl tree](https://en.wikipedia.org/wiki/AVL_tree) written in `c`.
-The code is probably the best way to understand how to use it starting in `.avltest.c`.
+All nodes within the tree will have a unique key, there are no duplicates. The
+code is probably the best way to understand how to use it starting in `.avltest.c`.
 
 ## avlTreeType - define generic methods
 ```c
